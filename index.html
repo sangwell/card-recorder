@@ -278,7 +278,6 @@
             e.addEventListener('click', function (event) {
                 let idx = event.currentTarget.getAttribute('index');
                 chosenArr.push(idx);
-                console.log('1_chosenArr', chosenArr);
                 // slideSelect(event);
                 submit();
             })
@@ -297,7 +296,6 @@
     //出牌
     function submit() {
         let cards = document.getElementsByClassName('card');
-        console.log('2_chosenArr', chosenArr);
         chosenArr.forEach((v, i) => {
             cards[v].setAttribute('count', cards[v].getAttribute('count') - 1);
             removeClass(cards[v], TYPE_WARNING);
@@ -325,7 +323,9 @@
             // removeDiZhuClass();
             const containerDiv = document.getElementById('container');
             containerDiv.className = 'container';
-            isDiZhu = false;
+            setTimeout(() => {
+                isDiZhu = false;
+            }, 0);
         }
         //重置状态
         reset();
