@@ -111,7 +111,6 @@
       .dizhu {
         background: #ffb100;
         color: #000;
-        margin-right: 70px;
       }
 
       .dizhu:hover {
@@ -135,7 +134,7 @@
         width: 450px;
         margin: 0 auto;
         border: 2px solid #b9b9b9;
-        overflow-y: scroll;
+        overflow-y: auto;
       }
 
       .parent-div {
@@ -159,27 +158,41 @@
         align-items: center;
         justify-content: center;
       }
+
+      .container {
+        padding-left: 10px;
+        margin-bottom: 10px;
+      }
+
+      .containerDiZhu {
+        padding-left: 10px;
+        margin-bottom: 10px;
+        background: rebeccapurple;
+      }
     </style>
 </head>
 
 <body>
-<div id="box">
-    <!-- <div class="clear">
-        <svg t="1716812292688" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
-            p-id="4243" width="200" height="200">
-            <path
-                d="M512 1024a512 512 0 0 1-512-512 512 512 0 0 1 512-512 512 512 0 0 1 512 512 512 512 0 0 1-512 512zM512 48.810667A464.042667 464.042667 0 0 0 48.810667 512 464.042667 464.042667 0 0 0 512 975.189333 464.042667 464.042667 0 0 0 975.189333 512 464.042667 464.042667 0 0 0 512 48.810667z"
-                fill="#FD0404" p-id="4244"></path>
-            <path
-                d="M551.424 512L760.32 304.469333c10.24-10.24 10.24-27.221333 0-39.168l-1.706667-1.706666a26.965333 26.965333 0 0 0-37.717333 0L512 472.917333 303.104 265.386667a26.965333 26.965333 0 0 0-37.717333 0l-1.706667 1.706666c-10.24 10.24-10.24 27.306667 0 39.168L472.576 512 263.68 719.530667c-10.24 10.24-10.24 27.221333 0 39.082666l1.706667 1.706667c10.496 10.24 27.306667 10.24 37.717333 0L512 551.253333 720.896 758.613333c10.496 10.24 27.221333 10.24 37.717333 0l1.706667-1.706666c10.24-10.24 10.24-27.306667 0-39.168L551.424 512z"
-                fill="#FD0404" p-id="4245"></path>
-        </svg>
-    </div> -->
+<div class="container" id="container">
+    <div id="box">
+        <!-- <div class="clear">
+            <svg t="1716812292688" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
+                p-id="4243" width="200" height="200">
+                <path
+                    d="M512 1024a512 512 0 0 1-512-512 512 512 0 0 1 512-512 512 512 0 0 1 512 512 512 512 0 0 1-512 512zM512 48.810667A464.042667 464.042667 0 0 0 48.810667 512 464.042667 464.042667 0 0 0 512 975.189333 464.042667 464.042667 0 0 0 975.189333 512 464.042667 464.042667 0 0 0 512 48.810667z"
+                    fill="#FD0404" p-id="4244"></path>
+                <path
+                    d="M551.424 512L760.32 304.469333c10.24-10.24 10.24-27.221333 0-39.168l-1.706667-1.706666a26.965333 26.965333 0 0 0-37.717333 0L512 472.917333 303.104 265.386667a26.965333 26.965333 0 0 0-37.717333 0l-1.706667 1.706666c-10.24 10.24-10.24 27.306667 0 39.168L472.576 512 263.68 719.530667c-10.24 10.24-10.24 27.221333 0 39.082666l1.706667 1.706667c10.496 10.24 27.306667 10.24 37.717333 0L512 551.253333 720.896 758.613333c10.496 10.24 27.221333 10.24 37.717333 0l1.706667-1.706666c10.24-10.24 10.24-27.306667 0-39.168L551.424 512z"
+                    fill="#FD0404" p-id="4245"></path>
+            </svg>
+        </div> -->
+    </div>
+    <div class="operate-btn">
+        <button type="button" class="dizhu" onclick="ownerSubmit()">地主</button>
+        <!--<button type="button" class="record" onclick="otherSubmit()">其他人</button>-->
+    </div>
 </div>
-<div class="operate-btn">
-    <button type="button" class="dizhu" onclick="ownerSubmit()">地主</button>
-    <button type="button" class="record" onclick="otherSubmit()">其他人</button>
-</div>
+
 <div class="list" id="recordDiv">
 
 </div>
@@ -194,6 +207,7 @@
     const TYPE_CHOSEN = ' card--chosen';
     const TYPE_WARNING = ' card--warning';
     const TYPE_EMPTY = ' card--empty';
+    let isDiZhu = false;
     //储存已经选择
     let chosenArr = [];
 
@@ -247,14 +261,14 @@
                 e.removeEventListener('mouseenter', slideSelect)
                 e.removeEventListener('mouseleave', slideSelect)
             })
-            // submit();
+            submit();
         }
 
         //点击输入,一直有效
         Array.from(cards).forEach((e) => {
             e.addEventListener('click', function (event) {
                 slideSelect(event);
-                // submit();
+                submit();
             })
         })
 
@@ -278,7 +292,7 @@
     }
 
     //出牌
-    function submit(isRecord) {
+    function submit() {
         let cards = document.getElementsByClassName('card');
         chosenArr.forEach((v, i) => {
             cards[v].setAttribute('count', cards[v].getAttribute('count') - 1);
@@ -289,7 +303,7 @@
                 addClass(cards[v], TYPE_EMPTY)
             }
         });
-        if (isRecord) {
+        if (isDiZhu) {
             const parentDiv = document.getElementById('recordDiv');
             const rowDiv = document.createElement('div');
             rowDiv.classList.add('row');
@@ -304,14 +318,28 @@
             } else {
                 parentDiv.appendChild(rowDiv);
             }
+            removeDiZhuClass();
         }
         //重置状态
         reset();
     }
 
     function ownerSubmit() {
-        submit(true);
+        isDiZhu = true;
+        addDiZhuClass();
+        // submit();
+    }
 
+    function addDiZhuClass() {
+        const containerDiv = document.getElementById('container');
+        containerDiv.className = 'containerDiZhu';
+    }
+
+    function removeDiZhuClass() {
+        console.log('remove=====');
+        const containerDiv = document.getElementById('container');
+        containerDiv.className = 'container';
+        // isDiZhu = false;
     }
 
     //右键加牌，防止出错牌
