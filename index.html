@@ -131,7 +131,7 @@
       .list {
         background: #ffffff;
         height: calc(100vh - 300px);
-        width: 450px;
+        width: 500px;
         margin: 0 auto;
         border: 2px solid #b9b9b9;
         overflow-y: auto;
@@ -245,7 +245,7 @@
         box.addEventListener('mousedown', installSlideInput)
         //鼠标抬起卸载
         box.addEventListener('mouseup', uninstallSlideInput)
-        box.addEventListener('mouseleave', uninstallSlideInput)
+        // box.addEventListener('mouseleave', uninstallSlideInput)
 
         //注册滑动输入
         function installSlideInput() {
@@ -264,14 +264,6 @@
             submit();
         }
 
-        //点击输入,一直有效
-        Array.from(cards).forEach((e) => {
-            e.addEventListener('click', function (event) {
-                slideSelect(event);
-                submit();
-            })
-        })
-
         //滑动输入
         function slideSelect(event) {
             let idx = event.currentTarget.getAttribute('index');
@@ -280,6 +272,17 @@
                 chosenArr.push(idx);
             }
         }
+
+        //点击输入,一直有效
+        Array.from(cards).forEach((e) => {
+            e.addEventListener('click', function (event) {
+                let idx = event.currentTarget.getAttribute('index');
+                chosenArr.push(idx);
+                console.log('1_chosenArr', chosenArr);
+                // slideSelect(event);
+                submit();
+            })
+        })
     }
 
     //重置全部牌的状态，凸起->对齐
@@ -294,6 +297,7 @@
     //出牌
     function submit() {
         let cards = document.getElementsByClassName('card');
+        console.log('2_chosenArr', chosenArr);
         chosenArr.forEach((v, i) => {
             cards[v].setAttribute('count', cards[v].getAttribute('count') - 1);
             removeClass(cards[v], TYPE_WARNING);
@@ -318,7 +322,10 @@
             } else {
                 parentDiv.appendChild(rowDiv);
             }
-            removeDiZhuClass();
+            // removeDiZhuClass();
+            const containerDiv = document.getElementById('container');
+            containerDiv.className = 'container';
+            isDiZhu = false;
         }
         //重置状态
         reset();
@@ -335,12 +342,11 @@
         containerDiv.className = 'containerDiZhu';
     }
 
-    function removeDiZhuClass() {
-        console.log('remove=====');
+    /*function removeDiZhuClass() {
         const containerDiv = document.getElementById('container');
         containerDiv.className = 'container';
-        // isDiZhu = false;
-    }
+        isDiZhu = false;
+    }*/
 
     //右键加牌，防止出错牌
     function addCardCount(e) {
