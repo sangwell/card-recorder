@@ -169,6 +169,40 @@
         margin-bottom: 10px;
         background: rebeccapurple;
       }
+
+      .selected {
+        background: transparent;
+        margin-top: 30px;
+        height: 50px;
+        text-align: center;
+        line-height: 50px;
+        font-size: 22px;
+        font-weight: bold;
+        color: #ffffff;
+        /*color: #000;*/
+        display: flex;
+
+        span {
+          display: flex;
+        }
+
+        .selected-card {
+          display: flex;
+
+          div {
+            width: 30px;
+            height: 50px;
+            font-weight: bold;
+            font-size: 24px;
+            background-color: lightblue;
+            margin: 3px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #000000;
+          }
+        }
+      }
     </style>
 </head>
 
@@ -187,9 +221,14 @@
             </svg>
         </div> -->
     </div>
+    <div class="selected">
+        <span>已选择：</span>
+        <div class="selected-card" id="selectedDiv">
+        </div>
+    </div>
     <div class="operate-btn">
-        <button type="button" class="dizhu" onclick="ownerSubmit()">地主</button>
-        <!--<button type="button" class="record" onclick="otherSubmit()">其他人</button>-->
+        <button type="button" class="dizhu" onclick="ownerSubmit()">地主模式</button>
+        <button type="button" class="record" onclick="confirm()">确定</button>
     </div>
 </div>
 
@@ -210,6 +249,7 @@
     let isDiZhu = false;
     //储存已经选择
     let chosenArr = [];
+    let chosenArrForDiZhu = [];
 
     //添加类名
     function addClass(e, name) {
@@ -270,6 +310,7 @@
             if (event.currentTarget.className.indexOf(TYPE_CHOSEN) == -1) {
                 addClass(event.currentTarget, TYPE_CHOSEN)
                 chosenArr.push(idx);
+                chosenArrForDiZhu.push(idx);
             }
         }
 
@@ -278,6 +319,7 @@
             e.addEventListener('click', function (event) {
                 let idx = event.currentTarget.getAttribute('index');
                 chosenArr.push(idx);
+                chosenArrForDiZhu.push(idx);
                 // slideSelect(event);
                 submit();
             })
@@ -306,7 +348,15 @@
             }
         });
         if (isDiZhu) {
-            const parentDiv = document.getElementById('recordDiv');
+            // const parentDiv = document.getElementById('selectedDiv');
+            const rowDiv = document.getElementById('selectedDiv');
+            chosenArr.forEach(number => {
+                const childDiv = document.createElement('div');
+                // childDiv.classList.add('child-div');
+                childDiv.textContent = `${arr[number]}`;
+                rowDiv.appendChild(childDiv);
+            })
+            /*const parentDiv = document.getElementById('recordDiv');
             const rowDiv = document.createElement('div');
             rowDiv.classList.add('row');
             chosenArr.forEach(number => {
@@ -319,20 +369,45 @@
                 parentDiv.insertBefore(rowDiv, parentDiv.firstChild);
             } else {
                 parentDiv.appendChild(rowDiv);
-            }
-            // removeDiZhuClass();
-            const containerDiv = document.getElementById('container');
+            }*/
+            /*const containerDiv = document.getElementById('container');
             containerDiv.className = 'container';
             setTimeout(() => {
                 isDiZhu = false;
-            }, 0);
+            }, 0);*/
         }
         //重置状态
         reset();
     }
 
+    function confirm() {
+        const parentDiv = document.getElementById('recordDiv');
+        const rowDiv = document.createElement('div');
+        rowDiv.classList.add('row');
+        chosenArrForDiZhu.forEach(number => {
+            const childDiv = document.createElement('div');
+            childDiv.classList.add('child-div');
+            childDiv.textContent = `${arr[number]}`;
+            rowDiv.appendChild(childDiv);
+        })
+        if (parentDiv.firstChild) {
+            parentDiv.insertBefore(rowDiv, parentDiv.firstChild);
+        } else {
+            parentDiv.appendChild(rowDiv);
+        }
+        const containerDiv = document.getElementById('container');
+        containerDiv.className = 'container';
+        setTimeout(() => {
+            isDiZhu = false;
+            chosenArrForDiZhu = [];
+            const rowDiv = document.getElementById('selectedDiv');
+            rowDiv.innerHTML = '';
+        }, 0);
+    }
+
     function ownerSubmit() {
         isDiZhu = true;
+        chosenArrForDiZhu = [];
         addDiZhuClass();
         // submit();
     }
